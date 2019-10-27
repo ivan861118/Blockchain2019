@@ -4,8 +4,13 @@ import base58
 
 import utils
 from pow import Pow
+from block import Block
 from blockchain import Blockchain
 
+
+latest = 'l'
+db_file = 'blockchain.db'
+block_bucket = 'blocks'
 
 
 def new_parser():
@@ -15,6 +20,10 @@ def new_parser():
     print_parser = sub_parser.add_parser(
         'print', help='Print all the blocks of the blockchain')
     print_parser.add_argument('--print', dest='print', action='store_true')
+    # A addblock command
+    print_parser = sub_parser.add_parser(
+        'addblock', help='add block to blockchain')
+    print_parser.add_argument('-transaction', type=str, dest='block_message', help='Message of block')
     # A getbalance command
     balance_parser = sub_parser.add_parser(
         'getbalance', help='Get balance of ADDRESS')
@@ -33,11 +42,9 @@ def create_blockchain(address):
     # utxo_set = UTXOSet(bc)
     # utxo_set.reindex()
 
-    print('Done!')
 
 
 def print_chain():
-    print ('Print Chain Start!')
     bc = Blockchain()
 
     for block in bc.blocks:
@@ -47,6 +54,13 @@ def print_chain():
         print("PoW: {0}".format(pow.validate()))
 
     print (len(list(bc.blocks) ) )
+
+
+def add_block(msg):
+    bc = Blockchain()
+    new_block = Block([],bc._tip).pow_of_block()
+    bc._block_put(new_block)
+    
     
     
 
@@ -71,6 +85,9 @@ if __name__ == '__main__':
 
     if hasattr(args, 'print'):
         print_chain()
+    
+    if hasattr(args, 'block_message'):
+        add_block(args.block_message)
 
     # if hasattr(args, 'balance_address'):
     #     get_balance(args.balance_address)
@@ -86,7 +103,10 @@ if __name__ == '__main__':
 
 # command
 """
-python cli.py print
+python cli.py print (v)
+python cli.py addblock -transaction {blabla}
+python cli.py printblock -height {height}
+
 python cli.py createwallet
 python cli.py getbalance --address 1M2ZZAUWTzG6ocih4N2Yzr6D9B8bFj1XMy
 python cli.py createblockchain --address 1X82i8GAzpSREp1pNLb6KzM9qZq1pjfbD 

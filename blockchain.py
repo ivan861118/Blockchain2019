@@ -19,9 +19,17 @@ class Blockchain(object):
 
     def __init__(self, address=None):
         self._bucket = Bucket(Blockchain.db_file, Blockchain.block_bucket)
-        # genesis = NewGnesisBlock()
-        genesis = NewGnesisBlock().pow_of_block()
-        self._block_put(genesis)
+        try:
+            self._tip = self._bucket.get('l')
+        except KeyError:
+            genesis = NewGnesisBlock().pow_of_block()
+            self._block_put(genesis)
+            # if not address:
+            #     self._tip = None
+            # else:
+            #     genesis = NewGnesisBlock().pow_of_block()
+            #     self._block_put(genesis)
+
 
     def _block_put(self, block):
         self._bucket.put(block.hash, block.serialize())
