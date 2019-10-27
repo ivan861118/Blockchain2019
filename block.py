@@ -3,19 +3,16 @@ import hashlib
 import binascii
 import pickle
 
-# import utils
-# from pow import Pow
-# from merkle_tree import MerkleTree
+import utils
+from pow import Pow
 
 def NewGnesisBlock():
-    return NewBlock("創世區塊啦",[],0)
+    return NewBlock("創世區塊啦",'',0)
 
 
 def NewBlock(transaction, prev_block_hash, prev_height):
     block = Block(transaction, prev_block_hash, prev_height)
     return block
-
-
 
 class Block(object):
     """ Represents a new Block object.
@@ -30,12 +27,10 @@ class Block(object):
         _nonce (int): A 32 bit arbitrary random number that is typically used once.
     """
 
-    def __init__(self, transaction_lst, prev_block_hash=[], prev_block_hight=0):
+    def __init__(self, transaction_lst=[], prev_block_hash='', prev_block_hight=0,):
         self._height = prev_block_hight+1
-        # self._prev_block_hash = utils.encode(prev_block_hash)
-        # self._timestamp = utils.encode(str(int(time.time())))
-        self._prev_block_hash = prev_block_hash
-        self._timestamp = None
+        self._prev_block_hash = utils.encode(prev_block_hash)
+        self._timestamp = utils.encode(str(int(time.time())))
         self._bits = None
         self._nonce = None
         self._hash = None
@@ -74,25 +69,6 @@ class Block(object):
         nonce, hash = pow.run()
         self._nonce, self._hash = nonce, utils.encode(hash)
         return self
-
-    def hash_transactions(self):
-        # return a hash of the transactions in the block
-        tx_byte_lst = []
-
-        for tx in self._tx_lst:
-            tx_byte_lst.append(tx.to_bytes())
-
-        m_tree = MerkleTree(tx_byte_lst)
-        return utils.decode(binascii.hexlify(m_tree.root_hash))
-
-    # def hash_transactions(self):
-    #     # return a hash of the transactions in the block
-    #     tx_hashs = []
-
-    #     for tx in self._tx_lst:
-    #         tx_hashs.append(tx.ID)
-
-    #     return utils.sum256_hex(utils.encode(''.join(tx_hashs)))
 
     def serialize(self):
         # serializes the block

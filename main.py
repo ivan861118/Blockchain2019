@@ -1,10 +1,11 @@
 from block import Block, NewBlock, NewGnesisBlock
+# from blockchain import Blockchain
 import hashlib
 
 def main():
     #=== Hash 
     string = "hello".encode()
-    x = hashlib.sha256(string).hexdigest()
+    msg = hashlib.sha256(string).hexdigest()
     # print(x)
     #=== Block 
     # block = Block([],x)
@@ -12,7 +13,7 @@ def main():
 
     #=== NewBlock 
     gBlock = NewGnesisBlock()
-    new_block = NewBlock("fuck you",x,5)
+    new_block = NewBlock("fuck you", msg, 5)
     print(gBlock)
     print(new_block)
 
