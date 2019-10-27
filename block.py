@@ -27,8 +27,8 @@ class Block(object):
         _nonce (int): A 32 bit arbitrary random number that is typically used once.
     """
 
-    def __init__(self, transaction_lst=[], prev_block_hash='', prev_block_hight=0):
-        self._height = prev_block_hight+1
+    def __init__(self, transaction_lst=[], prev_block_hash='', prev_block_height=0):
+        self._height = prev_block_height + 1
         self._prev_block_hash = utils.encode(prev_block_hash)
         self._timestamp = utils.encode(str(int(time.time())))
         self._bits = None
@@ -44,9 +44,13 @@ class Block(object):
             self._timestamp, self._tx_lst, self._prev_block_hash, self._height, self._hash, self._nonce)
 
     @property
+    def height(self):
+        return self._height
+
+    @property
     def hash(self):
         return utils.decode(self._hash)
-
+    
     @property
     def prev_block_hash(self):
         return utils.decode(self._prev_block_hash)

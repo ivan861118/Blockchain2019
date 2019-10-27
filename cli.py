@@ -48,21 +48,18 @@ def print_chain():
     bc = Blockchain()
 
     for block in bc.blocks:
-        print("Prev. hash: {0}".format(block.prev_block_hash))
+        print("Prev. hash: {0}".format(block._prev_block_hash))
         print("Hash: {0}".format(block.hash))
         pow = Pow(block)
+        print("Height: {0}".format(block.height) )
         print("PoW: {0}".format(pow.validate()))
-
-    print (len(list(bc.blocks) ) )
 
 
 def add_block(msg):
     bc = Blockchain()
-    new_block = Block([],bc._tip).pow_of_block()
-    bc._block_put(new_block)
-    
-    
-    
+    new_block = Block([], bc._tip, bc.length).pow_of_block()
+    if new_block:
+        bc._block_put(new_block)
 
 
 # def send(from_addr, to_addr, amount):
@@ -104,7 +101,7 @@ if __name__ == '__main__':
 # command
 """
 python cli.py print (v)
-python cli.py addblock -transaction {blabla}
+python cli.py addblock -transaction {blabla} (v)
 python cli.py printblock -height {height}
 
 python cli.py createwallet

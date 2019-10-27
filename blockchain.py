@@ -48,3 +48,7 @@ class Blockchain(object):
             block = pickle.loads(encoded_block)
             yield block
             current_tip = block.prev_block_hash
+    
+    @property
+    def length(self):
+        return len(list(self.blocks))
