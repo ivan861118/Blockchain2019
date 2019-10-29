@@ -20,6 +20,10 @@ def new_parser():
     print_parser = sub_parser.add_parser(
         'print', help='Print all the blocks of the blockchain')
     print_parser.add_argument('--print', dest='print', action='store_true')
+     # A printBlock command
+    print_parser = sub_parser.add_parser(
+        'printblock', help='Print all the blocks of the blockchain')
+    print_parser.add_argument('-height', type=int, dest='block_height', help='Height of block')
     # A addblock command
     print_parser = sub_parser.add_parser(
         'addblock', help='add block to blockchain')
@@ -54,10 +58,19 @@ def print_chain():
         print("Height: {0}".format(block.height) )
         print("PoW: {0}".format(pow.validate()))
 
+def print_block(height):
+    bc = Blockchain()
+    print(height)
+    print(type(height) )
+
+    for block in bc.blocks:
+        if block.height == height:
+            print (block)
+
 
 def add_block(msg):
     bc = Blockchain()
-    new_block = Block([], bc._tip, bc.length).pow_of_block()
+    new_block = Block([], bc._tip, bc.length, msg).pow_of_block()
     if new_block:
         bc._block_put(new_block)
 
@@ -70,7 +83,6 @@ def add_block(msg):
 #     cb_tx = CoinbaseTx(from_addr)
 #     new_block = bc.MineBlock([cb_tx, tx])
 #     utxo_set.update(new_block)
-#     print('Success!')
 
 
 if __name__ == '__main__':
@@ -83,6 +95,9 @@ if __name__ == '__main__':
     if hasattr(args, 'print'):
         print_chain()
     
+    if hasattr(args, 'block_height'):
+        print_block(args.block_height)
+
     if hasattr(args, 'block_message'):
         add_block(args.block_message)
 
